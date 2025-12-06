@@ -9,8 +9,8 @@ load_dotenv(override=True)
 
 
 class TokenPredictor:
-    def __init__(self, model_name: str):
-        self.client = OpenAI()
+    def __init__(self, model_name: str, base_url: str=None):
+        self.client = OpenAI(base_url=base_url)
         self.messages = []
         self.predictions = []
         self.model_name = model_name
@@ -155,3 +155,13 @@ def visualize_predictions(G: nx.DiGraph, figsize=(14, 80)):
 
     # plt.tight_layout()
     return plt
+
+if __name__ == "__main__":
+    message = "In one sentence, describe the color orange to someone who has never been able to see"
+    model_name = "gpt-4.1-mini"
+
+    predictor = TokenPredictor(model_name)
+    predictions = predictor.predict_tokens(message)
+    G = create_token_graph(model_name, predictions)
+    plt = visualize_predictions(G)
+    plt.show()
